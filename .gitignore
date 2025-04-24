@@ -21,3 +21,9 @@ crash.*.log
 # Exclude CLI configuration files
 .terraformrc
 terraform.rc
+
+# VS Code settings
+.vscode/
+
+# PEM key files
+*.pem
