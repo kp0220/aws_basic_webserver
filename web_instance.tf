@@ -1,7 +1,7 @@
 resource "aws_instance" "web" {
   ami           = var.ami_id
   instance_type = var.instance_type
-  key_name      = var.key_name
+  key_name      = aws_key_pair.generated_key.key_name
 
   user_data = file("user_data.sh")
 
@@ -9,7 +9,7 @@ resource "aws_instance" "web" {
     Name = "BasicWebsiteVM"
   }
 
-  security_groups = [aws_security_group.web_sg.name]
+  vpc_security_group_ids = [aws_security_group.web_sg.id]
 }
 
 resource "aws_security_group" "web_sg" {
@@ -36,4 +36,22 @@ resource "aws_security_group" "web_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+# Create a new SSH key pair
+resource "tls_private_key" "my_key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "aws_key_pair" "generated_key" {
+  key_name   = "terraform-key"
+  public_key = tls_private_key.my_key.public_key_openssh
+}
+
+# Save the private key to a local file
+resource "local_file" "private_key" {
+  content         = tls_private_key.my_key.private_key_pem
+  filename        = "${path.module}/terraform-key.pem"
+  file_permission = "0400"
 }
