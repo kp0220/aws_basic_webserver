@@ -18,12 +18,12 @@ crash.*.log
 # Exclude all .tfplan files
 *.tfplan
 
-# Exclude CLI configuration files
-.terraformrc
-terraform.rc
-
 # VS Code settings
 .vscode/
 
-# PEM key files
-*.pem
+# GitHub settings
+.github/
+
+# Exclude CLI configuration files
+.terraformrc
+terraform.rc
